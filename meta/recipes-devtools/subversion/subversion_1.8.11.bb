@@ -9,9 +9,15 @@ BBCLASSEXTEND = "native"
 
 inherit gettext pythonnative
 
+# Fix failed to recognize APR_INT64_T_FMT (in conjunction with -P):
+# https://issues.apache.org/jira/browse/SVN-4813
+# https://svn.apache.org/viewvc?view=revision&revision=1857391
+
 SRC_URI = "${APACHE_MIRROR}/${BPN}/${BPN}-${PV}.tar.bz2 \
            file://libtool2.patch \
            file://disable_macos.patch \
+           file://swig.m4.patch \
+           file://swigutil_py.patch \
 "
 SRC_URI[md5sum] = "766a89bbbb388f8eb76166672d3b9e49"
 SRC_URI[sha256sum] = "10b056420e1f194c12840368f6bf58842e6200f9cb8cc5ebbf9be2e89e56e4d9"
@@ -31,7 +37,7 @@ EXTRA_OECONF = " \
 inherit autotools
 
 export LDFLAGS += " -L${STAGING_LIBDIR} "
-CPPFLAGS += "-P"
+CPPFLAGS += " -P"
 
 acpaths = "-I build/ -I build/ac-macros/"
 
